@@ -20,6 +20,7 @@ public class User {
     private Long id;
 
     @JsonProperty("username")
+    @Column(unique = true)
     private String username;
 
     @JsonProperty("password")
