@@ -2,8 +2,10 @@ package dev.delfi.chatapp.chatappbackend.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface RoomRepository extends JpaRepository<Room, Long> {
-    Room findRoomById(Long id);
-    Room findRoomByName(String name);
+    Optional<Room> findRoomById(Long id);
+    Optional<Room> findRoomByName(String name);
     boolean existsByName(String name);
 }

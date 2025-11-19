@@ -3,9 +3,10 @@ package dev.delfi.chatapp.chatappbackend.model;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findByUser(User user);
-    Message findMessageById(Long id);
-    List<Message> findByRoom(Room room);
+    Optional<List<Message>> findByUser(User user);
+    Optional<Message> findMessageById(Long id);
+    Optional<List<Message>> findByRoom(Room room);
 }

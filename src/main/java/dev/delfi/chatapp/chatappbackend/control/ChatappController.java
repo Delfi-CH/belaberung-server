@@ -23,7 +23,7 @@ public class ChatappController {
     }
 
     //
-    // GET Requests
+    // GET Mappings
     //
 
     // Users
@@ -118,7 +118,57 @@ public class ChatappController {
     }
 
     //
-    // DELETE Mapping
+    // PUT Mappings
+    //
+
+    @PutMapping("/user/update/{id}/username")
+    public User updateUsername(@PathVariable Long id, @RequestBody String username) {
+        return chatappService.updateUsername(id, username);
+    }
+
+    @PutMapping("/user/update/{id}/password")
+    public User updateUserPassword(@PathVariable Long id, @RequestBody String password) {
+        return chatappService.updateUserPassword(id, password);
+    }
+
+    @PutMapping("/room/update/{id}/name")
+    public Room updateRoomName(@PathVariable Long id, @RequestBody String name) {
+        return chatappService.updateRoomName(id, name);
+    }
+
+    @PutMapping("/room/update/{id}/adduser")
+    public void updateRoomUser(@PathVariable Long id, @RequestBody Long userid) {
+        chatappService.addUserToRoom(id,userid);
+    }
+    @PutMapping("/room/update/{id}/promoteuser")
+    public void promoteUserInRoom(@PathVariable Long id, @RequestBody Long userid) {
+        chatappService.grantAdminPrivilegeToUserForRoom(id,userid);
+    }
+    @PutMapping("/room/update/{id}/changeowner")
+    public void changeOwnerOfRoom(@PathVariable Long id, @RequestBody Long userid) {
+        chatappService.changeOwnershipOfRoom(id,userid);
+    }
+    @PutMapping("/room/update/{id}/unbanuser")
+    public void unbanUserFromRoom(@PathVariable Long id, @RequestBody Long userid) {
+        chatappService.unbanUserFromRoom(id,userid);
+    }
+
+    @PutMapping("/room/update/{id}/removeuser")
+    public void removeUserFromRoom(@PathVariable Long id, @RequestBody Long userid) {
+        chatappService.removeUserFromRoom(id,userid);
+    }
+    @PutMapping("/room/update/{id}/demoteuser")
+    public void demoteUserInRoom(@PathVariable Long id, @RequestBody Long userid) {
+        chatappService.revokeAdminPrivilegeToUserForRoom(id,userid);
+    }
+    @PutMapping("/room/update/{id}/banuser")
+    public void banUserFromRoom(@PathVariable Long id, @RequestBody Long userid) {
+        chatappService.banUserFromRoom(id,userid);
+    }
+
+
+    //
+    // DELETE Mappings
     //
 
     @DeleteMapping("/user/delete/{id}")
