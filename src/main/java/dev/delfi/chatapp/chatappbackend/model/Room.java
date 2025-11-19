@@ -19,6 +19,7 @@ public class Room {
     private Long id;
 
     @JsonProperty("name")
+    @Column(unique = true)
     private String name;
 
     @ManyToMany

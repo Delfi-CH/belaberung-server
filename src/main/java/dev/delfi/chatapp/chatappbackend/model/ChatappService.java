@@ -82,6 +82,13 @@ public class ChatappService {
         return result;
     }
 
+    public boolean checkIfUserAlreadyExists(String username) {
+        return userRepository.existsByUsername(username);
+    }
+    public boolean checkIfRoomAlreadyExists(String name) {
+        return roomRepository.existsByName(name);
+    }
+
     // Modify Methods
 
     public User createUser(User user) { return userRepository.save(user); }

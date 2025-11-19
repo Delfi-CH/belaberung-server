@@ -4,6 +4,8 @@ import dev.delfi.chatapp.chatappbackend.model.ChatappService;
 import dev.delfi.chatapp.chatappbackend.model.Message;
 import dev.delfi.chatapp.chatappbackend.model.Room;
 import dev.delfi.chatapp.chatappbackend.model.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -92,16 +94,27 @@ public class ChatappController {
     //
 
     @PostMapping("/user/create")
-    public User createUser(@RequestBody User user) {
-        return chatappService.createUser(user);
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+
+        if (chatappService.checkIfUserAlreadyExists(user.getUsername())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(user);
+        } else {
+            User createdUser = chatappService.createUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        }
     }
     @PostMapping("/message/new")
     public Message sendMessage(@RequestBody Message message) {
         return chatappService.newMessage(message);
     }
     @PostMapping("/room/create")
-    public Room createRoom(@RequestBody Room room) {
-        return chatappService.createRoom(room);
+    public ResponseEntity<Room> createRoom(@RequestBody Room room) {
+        if (chatappService.checkIfRoomAlreadyExists(room.getName())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(room);
+        } else {
+            Room createdRoom = chatappService.createRoom(room);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdRoom);
+        }
     }
 
     //
