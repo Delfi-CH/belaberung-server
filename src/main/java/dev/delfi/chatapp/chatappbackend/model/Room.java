@@ -1,5 +1,7 @@
 package dev.delfi.chatapp.chatappbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,6 +32,7 @@ public class Room {
             joinColumns = @JoinColumn(name = "room_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonManagedReference
     @JsonProperty("users")
     private List<User> users = new ArrayList<>();
 
@@ -39,10 +42,12 @@ public class Room {
             joinColumns = @JoinColumn(name = "room_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonManagedReference
     @JsonProperty("banned")
     private List<User> bannedUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     @JsonProperty("messages")
     private List<Message> messages = new ArrayList<>();
 
@@ -52,11 +57,13 @@ public class Room {
             joinColumns = @JoinColumn(name = "room_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonManagedReference
     @JsonProperty("room_admins")
     private List<User> roomAdmins = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "room_root_id")
+    @JsonManagedReference
     @JsonProperty("room_root")
     private User roomRoot;
 
@@ -72,57 +79,75 @@ public class Room {
     public Room() {}
 
     public void addUser(User user) {
-        if (!this.users.contains(user) && this.users.size() < maxUsers && !this.bannedUsers.contains(user)) {
-            this.users.add(user);
-            user.joinRoom(this);
+        if (!users.contains(user) && users.size() < maxUsers && !bannedUsers.contains(user)) {
+            users.add(user);
+            if (!user.getJoinedRooms().contains(this)) {
+                user.getJoinedRooms().add(this);
+            }
         }
-    }
-
-    public void unbanUser(User user) {
-        this.bannedUsers.remove(user);
-        user.removeBannedRoom(this);
-    }
-
-    public void promoteToAdminUser(User user) {
-        if (!this.roomAdmins.contains(user) && this.users.contains(user)) {
-            this.roomAdmins.add(user);
-            user.addManagedRoom(this);
-        }
-    }
-
-    public void addMessage(Message message) {
-        this.messages.add(message);
-        message.setRoom(this);
     }
 
     public void removeUser(User user) {
         if (user != roomRoot) {
-            this.roomAdmins.remove(user);
-            this.users.remove(user);
-            user.stopManagingRoom(this);
-            user.leaveRoom(this);
+            users.remove(user);
+            roomAdmins.remove(user);
+            if (user.getJoinedRooms().contains(this)) {
+                user.getJoinedRooms().remove(this);
+            }
+            if (user.getManagedRooms().contains(this)) {
+                user.getManagedRooms().remove(this);
+            }
         }
     }
+
     public void banUser(User user) {
         if (user != roomRoot) {
-            this.roomAdmins.remove(user);
-            this.users.remove(user);
-            bannedUsers.add(user);
-            user.stopManagingRoom(this);
-            user.leaveRoom(this);
-            user.addBannedRoom(this);
+            removeUser(user);
+            if (!bannedUsers.contains(user)) {
+                bannedUsers.add(user);
+            }
+            if (!user.getBannedRooms().contains(this)) {
+                user.getBannedRooms().add(this);
+            }
+        }
+    }
+
+    public void unbanUser(User user) {
+        bannedUsers.remove(user);
+        if (user.getBannedRooms().contains(this)) {
+            user.getBannedRooms().remove(this);
+        }
+    }
+
+    public void promoteToAdminUser(User user) {
+        if (!roomAdmins.contains(user) && users.contains(user)) {
+            roomAdmins.add(user);
+            if (!user.getManagedRooms().contains(this)) {
+                user.getManagedRooms().add(this);
+            }
         }
     }
 
     public void demoteRoomAdmin(User user) {
-        if (this.roomAdmins.contains(user)) {
-            this.roomAdmins.remove(user);
-            user.stopManagingRoom(this);
+        if (roomAdmins.contains(user)) {
+            roomAdmins.remove(user);
+            if (user.getManagedRooms().contains(this)) {
+                user.getManagedRooms().remove(this);
+            }
+        }
+    }
+
+    public void addMessage(Message message) {
+        if (!messages.contains(message)) {
+            messages.add(message);
+            message.setRoom(this);
         }
     }
 
     public void removeMessage(Message message) {
-        this.messages.remove(message);
-        message.setRoom(null);
+        if (messages.contains(message)) {
+            messages.remove(message);
+            message.setRoom(null);
+        }
     }
 }
