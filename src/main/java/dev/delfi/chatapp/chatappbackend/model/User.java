@@ -53,7 +53,7 @@ public class User {
     private List<Room> managedRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "roomRoot")
-    @JsonBackReference(value = "room-owner")
+    @JsonManagedReference(value = "room-owner")
     @JsonProperty("owned_rooms")
     private List<Room> ownedRooms = new ArrayList<>();
 

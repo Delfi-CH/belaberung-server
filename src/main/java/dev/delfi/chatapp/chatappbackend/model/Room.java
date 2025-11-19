@@ -57,7 +57,7 @@ public class Room {
             joinColumns = @JoinColumn(name = "room_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @JsonManagedReference(value = "room-admins")
+    @JsonBackReference(value = "room-admins")
     @JsonProperty("room_admins")
     private List<User> roomAdmins = new ArrayList<>();
 
