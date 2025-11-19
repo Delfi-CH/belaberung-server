@@ -27,13 +27,13 @@ public class ChatappService {
         return messageRepository.findByUserID(userID);
     }
     public List<Message> getMessagesByRoomID(Long roomID) {
-        return messageRepository.findByRoomId(roomID);
+        return messageRepository.findByRoomID(roomID);
     }
     public Message getMessageById(Long id) {
-        return messageRepository.findByMessageID(id);
+        return messageRepository.findMessageById(id);
     }
     public List<Message> getMessagesBetweenTimestampsInRoom(Date from, Date to, Long roomID) {
-        List<Message> messages = messageRepository.findByRoomId(roomID);
+        List<Message> messages = messageRepository.findByRoomID(roomID);
         List<Message> result = new ArrayList<>();
 
         for (Message message : messages) {
@@ -61,7 +61,7 @@ public class ChatappService {
         return userRepository.findByUsername(username);
     }
     public User getUserById(Long id) {
-        return userRepository.findByUserID(id);
+        return userRepository.findUserById(id);
     }
     public List<Room> getAllRooms() {
         return roomRepository.findAll();
@@ -69,14 +69,14 @@ public class ChatappService {
     public Room getRoomById(Long id) {
         return roomRepository.findRoomById(id);
     }
-    public Room getRoomByName(String roomName) {
-        return roomRepository.findRoomByName(roomName);
+    public Room getRoomByName(String name) {
+        return roomRepository.findRoomByName(name);
     }
-    public List<Room> getAllRoomsWithUserByUserID(Long userID) {
+    public List<Room> getAllRoomsWithUserByUser(User user) {
         List<Room> rooms = roomRepository.findAll();
         List<Room> result = new ArrayList<>();
         for (Room room : rooms) {
-            if (room.getUsers().contains(userID)) {
+            if (room.getUsers().contains(user)) {
                 result.add(room);
             }
         }

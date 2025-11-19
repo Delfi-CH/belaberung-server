@@ -39,7 +39,8 @@ public class ChatappController {
     }
     @GetMapping("/user/rooms/{id}")
     public List<Room> getRoomsOfUserByUserID(@PathVariable Long id) {
-        return chatappService.getAllRoomsWithUserByUserID(id);
+        User user = chatappService.getUserById(id);
+        return chatappService.getAllRoomsWithUserByUser(user);
     }
 
     // Messages
