@@ -1,0 +1,7 @@
+chatapp:
+  domain: example.com
+  applicationName: chatapp-server
+  applicationVersion: 0
+  protocolVersion: 0
+  adminName: root
+  adminMail: root@example.com

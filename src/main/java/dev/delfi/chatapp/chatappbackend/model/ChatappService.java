@@ -1,7 +1,7 @@
 package dev.delfi.chatapp.chatappbackend.model;
 
+import dev.delfi.chatapp.chatappbackend.config.ChatappConfig;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,11 +12,13 @@ public class ChatappService {
     private final UserRepository userRepository;
     private final MessageRepository messageRepository;
     private final RoomRepository roomRepository;
+    private final String configDomain;
 
-    public ChatappService(UserRepository userRepository, MessageRepository messageRepository, RoomRepository roomRepository) {
+    public ChatappService(UserRepository userRepository, MessageRepository messageRepository, RoomRepository roomRepository, ChatappConfig config) {
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
         this.roomRepository = roomRepository;
+        this.configDomain = config.getDomain();
     }
 
     // Query Methods
@@ -89,11 +91,29 @@ public class ChatappService {
         return roomRepository.existsByName(name);
     }
 
-    // Modify Methods
+    // Create Methods
 
-    public User createUser(User user) { return userRepository.save(user); }
+    public User createUser(User user) {
+        user.setDomain(configDomain);
+        return userRepository.save(user);
+    }
     public Message newMessage(Message message) { return messageRepository.save(message); }
     public Room createRoom(Room room) { return roomRepository.save(room); }
+
+    // Modify Methods
+
+    public User updateName(User user, String name) {
+        user.setUsername(name);
+        return userRepository.save(user);
+    }
+
+    public User updatePassword(Long id, String password) {
+        User user = userRepository.findUserById(id);
+        user.setPassword(password);
+        return userRepository.save(user);
+    }
+
+    // Delete Methods
 
     public void deleteUserByID(Long id) { userRepository.deleteById(id); }
     public void deleteMessageByID(Long id) { messageRepository.deleteById(id); }
