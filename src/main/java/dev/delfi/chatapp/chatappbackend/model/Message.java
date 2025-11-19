@@ -1,10 +1,7 @@
 package dev.delfi.chatapp.chatappbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,11 +18,13 @@ public class Message {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("roomid")
-    private Long roomID;
+    @JsonProperty("room")
+    @ManyToOne
+    private Room room;
 
-    @JsonProperty("userid")
-    private Long userID;
+    @JsonProperty("user")
+    @ManyToOne
+    private User user;
 
     @JsonProperty("timestamp")
     private Date timestamp;

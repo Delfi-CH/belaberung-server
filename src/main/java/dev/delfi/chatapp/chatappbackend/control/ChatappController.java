@@ -50,11 +50,13 @@ public class ChatappController {
     }
     @GetMapping("/message/room/{roomid}")
     public List<Message> getMessagesByRoomID(@PathVariable Long roomid) {
-        return chatappService.getMessagesByRoomID(roomid);
+        Room room = chatappService.getRoomById(roomid);
+        return chatappService.getMessagesByRoom(room);
     }
     @GetMapping("/message/user/{userid}")
     public List<Message> getMessagesByUserID(@PathVariable Long userid) {
-        return chatappService.getMessagesByUserID(userid);
+        User user = chatappService.getUserById(userid);
+        return chatappService.getMessagesByUser(user);
     }
     @GetMapping("/message/{id}")
     public Message getMessageByID(@PathVariable Long id) {
@@ -62,11 +64,13 @@ public class ChatappController {
     }
     @GetMapping("/message/room/{roomid}/timeframe")
     public List<Message> getMessagesByRoomIDInTimeframe(@PathVariable Long roomid, @RequestParam Date from, @RequestParam Date to) {
-        return chatappService.getMessagesBetweenTimestampsInRoom(from, to, roomid);
+        Room room = chatappService.getRoomById(roomid);
+        return chatappService.getMessagesBetweenTimestampsInRoom(from, to, room);
     }
     @GetMapping("/message/user/{userid}/timeframe")
     public List<Message> getMessagesByUserIDInTimeframe(@PathVariable Long userid, @RequestParam Date from, @RequestParam Date to) {
-        return chatappService.getMessagesBetweenTimestampsByUser(from, to, userid);
+        User user = chatappService.getUserById(userid);
+        return chatappService.getMessagesBetweenTimestampsByUser(from, to, user);
     }
 
     // Rooms

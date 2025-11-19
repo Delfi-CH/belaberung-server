@@ -23,19 +23,18 @@ public class ChatappService {
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
     }
-    public List<Message> getMessagesByUserID(Long userID) {
-        return messageRepository.findByUserID(userID);
+    public List<Message> getMessagesByUser(User user) {
+        return messageRepository.findByUser(user);
     }
-    public List<Message> getMessagesByRoomID(Long roomID) {
-        return messageRepository.findByRoomID(roomID);
+    public List<Message> getMessagesByRoom(Room room) {
+        return messageRepository.findByRoom(room);
     }
     public Message getMessageById(Long id) {
         return messageRepository.findMessageById(id);
     }
-    public List<Message> getMessagesBetweenTimestampsInRoom(Date from, Date to, Long roomID) {
-        List<Message> messages = messageRepository.findByRoomID(roomID);
+    public List<Message> getMessagesBetweenTimestampsInRoom(Date from, Date to, Room room) {
+        List<Message> messages = messageRepository.findByRoom(room);
         List<Message> result = new ArrayList<>();
-
         for (Message message : messages) {
             if (message.getTimestamp().after(from) && message.getTimestamp().before(to)) {
                 result.add(message);
@@ -43,8 +42,8 @@ public class ChatappService {
         }
         return result;
     }
-    public List<Message> getMessagesBetweenTimestampsByUser(Date from, Date to, Long userID) {
-        List<Message> messages = messageRepository.findByUserID(userID);
+    public List<Message> getMessagesBetweenTimestampsByUser(Date from, Date to, User user) {
+        List<Message> messages = messageRepository.findByUser(user);
         List<Message> result = new ArrayList<>();
 
         for (Message message : messages) {
