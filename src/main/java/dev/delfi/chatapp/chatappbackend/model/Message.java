@@ -22,13 +22,13 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "room_id")
-    @JsonBackReference
+    @JsonBackReference(value = "room-messages")
     @JsonProperty("room")
     private Room room;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonBackReference(value = "user-messages")
     @JsonProperty("user")
     private User user;
 
@@ -41,7 +41,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "reply_id")
-    @JsonBackReference
+    @JsonBackReference(value = "message-reply")
     @JsonProperty("reply")
     private Message replyMessage;
 

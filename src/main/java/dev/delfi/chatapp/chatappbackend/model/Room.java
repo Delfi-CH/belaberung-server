@@ -32,7 +32,7 @@ public class Room {
             joinColumns = @JoinColumn(name = "room_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @JsonManagedReference
+    @JsonManagedReference(value = "room-users")
     @JsonProperty("users")
     private List<User> users = new ArrayList<>();
 
@@ -42,12 +42,12 @@ public class Room {
             joinColumns = @JoinColumn(name = "room_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @JsonManagedReference
+    @JsonManagedReference(value = "room-banned")
     @JsonProperty("banned")
     private List<User> bannedUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference(value = "room-messages")
     @JsonProperty("messages")
     private List<Message> messages = new ArrayList<>();
 
@@ -57,13 +57,13 @@ public class Room {
             joinColumns = @JoinColumn(name = "room_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @JsonManagedReference
+    @JsonManagedReference(value = "room-admins")
     @JsonProperty("room_admins")
     private List<User> roomAdmins = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "room_root_id")
-    @JsonManagedReference
+    @JsonManagedReference(value = "room-owner")
     @JsonProperty("room_root")
     private User roomRoot;
 

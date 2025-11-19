@@ -33,27 +33,27 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference(value = "user-messages")
     @JsonProperty("messages")
     private List<Message> messages = new ArrayList<>();
 
     @ManyToMany(mappedBy = "users")
-    @JsonBackReference
+    @JsonBackReference(value = "room-users")
     @JsonProperty("rooms")
     private List<Room> joinedRooms = new ArrayList<>();
 
     @ManyToMany(mappedBy = "bannedUsers")
-    @JsonBackReference
+    @JsonBackReference(value = "room-banned")
     @JsonProperty("banned_rooms")
     private List<Room> bannedRooms = new ArrayList<>();
 
     @ManyToMany(mappedBy = "roomAdmins")
-    @JsonBackReference
+    @JsonBackReference(value = "room-admins")
     @JsonProperty("managed_rooms")
     private List<Room> managedRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "roomRoot")
-    @JsonBackReference
+    @JsonBackReference(value = "room-admins")
     @JsonProperty("owned_rooms")
     private List<Room> ownedRooms = new ArrayList<>();
 
