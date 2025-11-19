@@ -1,7 +1,8 @@
 package dev.delfi.chatapp.chatappbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,10 @@ import lombok.Setter;
 
 import java.util.Date;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 @Getter
 @Setter
 @Entity
@@ -22,13 +27,11 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "room_id")
-    @JsonBackReference(value = "room-messages")
     @JsonProperty("room")
     private Room room;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference(value = "user-messages")
     @JsonProperty("user")
     private User user;
 
@@ -41,7 +44,6 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "reply_id")
-    @JsonBackReference(value = "message-reply")
     @JsonProperty("reply")
     private Message replyMessage;
 

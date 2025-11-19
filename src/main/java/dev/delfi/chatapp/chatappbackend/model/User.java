@@ -1,8 +1,8 @@
 package dev.delfi.chatapp.chatappbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +11,10 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 @Getter
 @Setter
 @Entity
@@ -33,27 +37,22 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "user-messages")
     @JsonProperty("messages")
     private List<Message> messages = new ArrayList<>();
 
     @ManyToMany(mappedBy = "users")
-    @JsonBackReference(value = "room-users")
     @JsonProperty("rooms")
     private List<Room> joinedRooms = new ArrayList<>();
 
     @ManyToMany(mappedBy = "bannedUsers")
-    @JsonBackReference(value = "room-banned")
     @JsonProperty("banned_rooms")
     private List<Room> bannedRooms = new ArrayList<>();
 
     @ManyToMany(mappedBy = "roomAdmins")
-    @JsonBackReference(value = "room-admins")
     @JsonProperty("managed_rooms")
     private List<Room> managedRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "roomRoot")
-    @JsonManagedReference(value = "room-owner")
     @JsonProperty("owned_rooms")
     private List<Room> ownedRooms = new ArrayList<>();
 
