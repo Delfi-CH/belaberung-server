@@ -2,6 +2,7 @@ package dev.delfi.chatapp.chatappbackend.model;
 
 import dev.delfi.chatapp.chatappbackend.config.ChatappConfig;
 import dev.delfi.chatapp.chatappbackend.exception.MessageNotFoundException;
+import dev.delfi.chatapp.chatappbackend.exception.RoomHasToManyUsersExecption;
 import dev.delfi.chatapp.chatappbackend.exception.RoomNotFoundException;
 import dev.delfi.chatapp.chatappbackend.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
@@ -94,6 +95,20 @@ public class ChatappService {
         return roomRepository.existsByName(name);
     }
 
+    public Integer getNumberOfUsersInRoom(Long id) {
+        Room room = roomRepository.findRoomById(id).orElseThrow(() -> new RoomNotFoundException("Room with id " + id + " not found"));
+        return room.getUsers().size();
+    }
+
+    public List<User> getUsersInRoom(Long id) {
+        Room room = roomRepository.findRoomById(id).orElseThrow(() -> new RoomNotFoundException("Room with id " + id + " not found"));
+        return room.getUsers();
+    }
+    public List<Message> getMessagesInRoom(Long id) {
+        Room room = roomRepository.findRoomById(id).orElseThrow(() -> new RoomNotFoundException("Room with id " + id + " not found"));
+        return room.getMessages();
+    }
+
     // Create Methods
 
     public User createUser(User user) {
@@ -101,7 +116,20 @@ public class ChatappService {
         return userRepository.save(user);
     }
     public Message newMessage(Message message) { return messageRepository.save(message); }
-    public Room createRoom(Room room) { return roomRepository.save(room); }
+    public Room createRoom(Room room) {
+
+        if (room.isDirectMessage()) {
+            room.setMaxUsers(2L);
+        } else if (room.isPublic()) {
+            room.setMaxUsers(999L);
+        } else if (room.getMaxUsers() > 999L) {
+            room.setMaxUsers(999L);
+        } else if (room.getMaxUsers() == 2L) {
+            room.setDirectMessage(true);
+        }
+
+        return roomRepository.save(room);
+    }
 
     // Modify Methods
 
@@ -126,8 +154,13 @@ public class ChatappService {
     public void addUserToRoom(Long roomID, Long userID) {
         Room room = roomRepository.findRoomById(roomID).orElseThrow(() -> new RoomNotFoundException("Room with id " + roomID + " not found"));
         User user = userRepository.findUserById(userID).orElseThrow(() -> new UserNotFoundException("User with id " + userID + " not found"));
-        user.joinRoom(room);
+        if (!(room.getMaxUsers() >= room.getUsers().size())) {
+            user.joinRoom(room);
+        } else {
+            throw new RoomHasToManyUsersExecption("Room with id " + roomID + " has too many users");
+        }
         userRepository.save(user);
+        roomRepository.save(room);
     }
 
     public void removeUserFromRoom(Long roomID, Long userID) {
@@ -135,6 +168,7 @@ public class ChatappService {
         User user = userRepository.findUserById(userID).orElseThrow(() -> new UserNotFoundException("User with id " + userID + " not found"));
         user.leaveRoom(room);
         userRepository.save(user);
+        roomRepository.save(room);
     }
 
     public void grantAdminPrivilegeToUserForRoom(Long roomID, Long userID) {
@@ -142,6 +176,7 @@ public class ChatappService {
         User user = userRepository.findUserById(userID).orElseThrow(() -> new UserNotFoundException("User with id " + userID + " not found"));
         user.addManagedRoom(room);
         userRepository.save(user);
+        roomRepository.save(room);
     }
 
     public void revokeAdminPrivilegeToUserForRoom(Long roomID, Long userID) {
@@ -149,6 +184,7 @@ public class ChatappService {
         User user = userRepository.findUserById(userID).orElseThrow(() -> new UserNotFoundException("User with id " + userID + " not found"));
         user.stopManagingRoom(room);
         userRepository.save(user);
+        roomRepository.save(room);
     }
 
     public void banUserFromRoom(Long roomID, Long userID) {
@@ -162,13 +198,33 @@ public class ChatappService {
         User user = userRepository.findUserById(userID).orElseThrow(() -> new UserNotFoundException("User with id " + userID + " not found"));
         user.removeBannedRoom(room);
         userRepository.save(user);
+        roomRepository.save(room);
     }
 
     public void changeOwnershipOfRoom(Long roomID, Long newOwnerID) {
         Room room = roomRepository.findRoomById(roomID).orElseThrow(() -> new RoomNotFoundException("Room with id " + roomID + " not found"));
         User user = userRepository.findUserById(newOwnerID).orElseThrow(() -> new UserNotFoundException("User with id " + newOwnerID + " not found"));
         room.setRoomRoot(user);
+        room.addUser(user);
         userRepository.save(user);
+        roomRepository.save(room);
+    }
+
+    public void setPublicStatusOfRoom(Long id, boolean newStatus) {
+        Room room = roomRepository.findRoomById(id).orElseThrow(() -> new RoomNotFoundException("Room with id " + id + " not found"));
+        room.setPublic(newStatus);
+        roomRepository.save(room);
+    }
+
+    public void updateMaxUsersOfRoom(Long id, long newMaxUsers) {
+        Room room = roomRepository.findRoomById(id).orElseThrow(() -> new RoomNotFoundException("Room with id " + id + " not found"));
+        room.setMaxUsers(newMaxUsers);
+        if (room.getMaxUsers() > 999L) {
+            room.setMaxUsers(999L);
+        } else if (room.getMaxUsers() == 2L) {
+            room.setDirectMessage(true);
+        }
+        roomRepository.save(room);
     }
 
     // Delete Methods

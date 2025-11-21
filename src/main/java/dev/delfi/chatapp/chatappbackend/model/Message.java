@@ -26,20 +26,22 @@ public class Message {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", nullable = false)
     @JsonProperty("room")
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonProperty("user")
     private User user;
 
     @JsonProperty("timestamp")
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
     private Date timestamp;
 
     @JsonProperty("content")
+    @Column(nullable = false)
     private String content;
 
     @ManyToOne

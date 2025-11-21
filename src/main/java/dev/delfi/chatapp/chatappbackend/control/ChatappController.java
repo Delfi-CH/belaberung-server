@@ -166,6 +166,15 @@ public class ChatappController {
         chatappService.banUserFromRoom(id,userid);
     }
 
+    @PutMapping("/room/update/{id}/maxusers")
+    public void setMaxUsersFromRoom(@PathVariable Long id, @RequestBody Integer maxusers) {
+        chatappService.updateMaxUsersOfRoom(id, maxusers);
+    }
+    @PutMapping("/room/update/{id}/public")
+    public void setPublicStatusOfRoom(@PathVariable Long id, @RequestBody boolean isPublic) {
+        chatappService.setPublicStatusOfRoom(id, isPublic);
+    }
+
 
     //
     // DELETE Mappings

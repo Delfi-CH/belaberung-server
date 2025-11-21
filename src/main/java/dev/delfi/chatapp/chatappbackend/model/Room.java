@@ -63,7 +63,7 @@ public class Room {
     private List<User> roomAdmins = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "room_root_id")
+    @JoinColumn(name = "room_root_id", nullable = false)
     @JsonProperty("room_root")
     private User roomRoot;
 
