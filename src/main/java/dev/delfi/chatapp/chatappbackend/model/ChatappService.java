@@ -126,6 +126,10 @@ public class ChatappService {
             room.setDirectMessage(true);
         }
 
+        if (!room.getUsers().contains(room.getRoomRoot())) {
+            room.addUser(room.getRoomRoot());
+        }
+
         return roomRepository.save(room);
     }
 

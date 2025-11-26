@@ -1,9 +1,6 @@
 package dev.delfi.chatapp.chatappbackend.control;
 
-import dev.delfi.chatapp.chatappbackend.model.ChatappService;
-import dev.delfi.chatapp.chatappbackend.model.Message;
-import dev.delfi.chatapp.chatappbackend.model.Room;
-import dev.delfi.chatapp.chatappbackend.model.User;
+import dev.delfi.chatapp.chatappbackend.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +14,11 @@ import java.util.List;
 public class ChatappController {
 
     private final ChatappService chatappService;
+    private final UserRepository userRepository;
 
-    public ChatappController(ChatappService chatappService) {
+    public ChatappController(ChatappService chatappService, UserRepository userRepository) {
         this.chatappService = chatappService;
+        this.userRepository = userRepository;
     }
 
     //
@@ -112,6 +111,10 @@ public class ChatappController {
         if (chatappService.checkIfRoomAlreadyExists(room.getName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(room);
         } else {
+            if (room.getRoomRoot() == null) {
+                User root = userRepository.getRoot();
+                room.setRoomRoot(root);
+            }
             Room createdRoom = chatappService.createRoom(room);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdRoom);
         }
