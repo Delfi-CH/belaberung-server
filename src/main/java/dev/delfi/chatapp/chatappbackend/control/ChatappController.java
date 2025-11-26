@@ -2,15 +2,16 @@ package dev.delfi.chatapp.chatappbackend.control;
 
 import dev.delfi.chatapp.chatappbackend.model.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/chat", produces = "application/json")
-@CrossOrigin("*")
 public class ChatappController {
 
     private final ChatappService chatappService;
@@ -143,43 +144,50 @@ public class ChatappController {
     }
 
     @PutMapping("/room/update/{id}/adduser")
-    public void updateRoomUser(@PathVariable Long id, @RequestBody Long userid) {
-        chatappService.addUserToRoom(id,userid);
-    }
-    @PutMapping("/room/update/{id}/promoteuser")
-    public void promoteUserInRoom(@PathVariable Long id, @RequestBody Long userid) {
-        chatappService.grantAdminPrivilegeToUserForRoom(id,userid);
-    }
-    @PutMapping("/room/update/{id}/changeowner")
-    public void changeOwnerOfRoom(@PathVariable Long id, @RequestBody Long userid) {
-        chatappService.changeOwnershipOfRoom(id,userid);
-    }
-    @PutMapping("/room/update/{id}/unbanuser")
-    public void unbanUserFromRoom(@PathVariable Long id, @RequestBody Long userid) {
-        chatappService.unbanUserFromRoom(id,userid);
+    public void updateRoomUser(@PathVariable Long id, @RequestBody Map<String, Long> body) {
+        chatappService.addUserToRoom(id, body.get("userId"));
     }
 
     @PutMapping("/room/update/{id}/removeuser")
-    public void removeUserFromRoom(@PathVariable Long id, @RequestBody Long userid) {
-        chatappService.removeUserFromRoom(id,userid);
+    public void removeUserFromRoom(@PathVariable Long id, @RequestBody Map<String, Long> body) {
+        chatappService.removeUserFromRoom(id, body.get("userId"));
     }
-    @PutMapping("/room/update/{id}/demoteuser")
-    public void demoteUserInRoom(@PathVariable Long id, @RequestBody Long userid) {
-        chatappService.revokeAdminPrivilegeToUserForRoom(id,userid);
-    }
+
     @PutMapping("/room/update/{id}/banuser")
-    public void banUserFromRoom(@PathVariable Long id, @RequestBody Long userid) {
-        chatappService.banUserFromRoom(id,userid);
+    public void banUserFromRoom(@PathVariable Long id, @RequestBody Map<String, Long> body) {
+        chatappService.banUserFromRoom(id, body.get("userId"));
+    }
+
+    @PutMapping("/room/update/{id}/unbanuser")
+    public void unbanUserFromRoom(@PathVariable Long id, @RequestBody Map<String, Long> body) {
+        chatappService.unbanUserFromRoom(id, body.get("userId"));
+    }
+
+    @PutMapping("/room/update/{id}/promoteuser")
+    public void promoteUserInRoom(@PathVariable Long id, @RequestBody Map<String, Long> body) {
+        chatappService.grantAdminPrivilegeToUserForRoom(id, body.get("userId"));
+    }
+
+    @PutMapping("/room/update/{id}/demoteuser")
+    public void demoteUserInRoom(@PathVariable Long id, @RequestBody Map<String, Long> body) {
+        chatappService.revokeAdminPrivilegeToUserForRoom(id, body.get("userId"));
+    }
+
+    @PutMapping("/room/update/{id}/changeowner")
+    public void changeOwnerOfRoom(@PathVariable Long id, @RequestBody Map<String, Long> body) {
+        chatappService.changeOwnershipOfRoom(id, body.get("userId"));
     }
 
     @PutMapping("/room/update/{id}/maxusers")
-    public void setMaxUsersFromRoom(@PathVariable Long id, @RequestBody Integer maxusers) {
-        chatappService.updateMaxUsersOfRoom(id, maxusers);
+    public void setMaxUsersFromRoom(@PathVariable Long id, @RequestBody Map<String, Integer> body) {
+        chatappService.updateMaxUsersOfRoom(id, body.get("maxUsers"));
     }
+
     @PutMapping("/room/update/{id}/public")
-    public void setPublicStatusOfRoom(@PathVariable Long id, @RequestBody boolean isPublic) {
-        chatappService.setPublicStatusOfRoom(id, isPublic);
+    public void setPublicStatusOfRoom(@PathVariable Long id, @RequestBody Map<String, Boolean> body) {
+        chatappService.setPublicStatusOfRoom(id, body.get("isPublic"));
     }
+
 
 
     //
