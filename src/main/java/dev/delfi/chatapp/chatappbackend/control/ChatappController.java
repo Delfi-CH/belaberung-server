@@ -87,7 +87,10 @@ public class ChatappController {
     public Room getRoomByName(@PathVariable String roomname) {
         return chatappService.getRoomByName(roomname);
     }
-
+    @GetMapping("/room/public")
+    public List<Room> getAllPublicRooms() {
+        return chatappService.getAllPublicRooms();
+    }
     //
     // POST Mappings
     //

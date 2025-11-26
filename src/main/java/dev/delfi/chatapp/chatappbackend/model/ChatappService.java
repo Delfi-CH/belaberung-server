@@ -85,6 +85,16 @@ public class ChatappService {
         }
         return result;
     }
+    public List<Room> getAllPublicRooms() {
+        List<Room> rooms = roomRepository.findAll();
+        List<Room> result = new ArrayList<>();
+        for (Room room : rooms) {
+            if (room.isPublic()) {
+                result.add(room);
+            }
+        }
+        return result;
+    }
 
     public boolean checkIfUserAlreadyExists(String username) {
         return userRepository.existsByUsername(username);
