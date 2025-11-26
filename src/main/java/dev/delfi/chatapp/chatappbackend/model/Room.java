@@ -1,6 +1,7 @@
 package dev.delfi.chatapp.chatappbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -32,6 +33,7 @@ public class Room {
     private String name;
 
     @ManyToMany
+    @JsonIdentityReference(alwaysAsId = true)
     @JoinTable(
             name = "room_users",
             joinColumns = @JoinColumn(name = "room_id"),
@@ -41,6 +43,7 @@ public class Room {
     private List<User> users = new ArrayList<>();
 
     @ManyToMany
+    @JsonIdentityReference(alwaysAsId = true)
     @JoinTable(
             name = "banned_users",
             joinColumns = @JoinColumn(name = "room_id"),
@@ -50,10 +53,12 @@ public class Room {
     private List<User> bannedUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("messages")
     private List<Message> messages = new ArrayList<>();
 
     @ManyToMany
+    @JsonIdentityReference(alwaysAsId = true)
     @JoinTable(
             name = "room_admins",
             joinColumns = @JoinColumn(name = "room_id"),
@@ -63,6 +68,7 @@ public class Room {
     private List<User> roomAdmins = new ArrayList<>();
 
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     @JoinColumn(name = "room_root_id", nullable = false)
     @JsonProperty("room_root")
     private User roomRoot;

@@ -1,6 +1,7 @@
 package dev.delfi.chatapp.chatappbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -37,22 +38,27 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("messages")
     private List<Message> messages = new ArrayList<>();
 
     @ManyToMany(mappedBy = "users")
+    @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("rooms")
     private List<Room> joinedRooms = new ArrayList<>();
 
     @ManyToMany(mappedBy = "bannedUsers")
+    @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("banned_rooms")
     private List<Room> bannedRooms = new ArrayList<>();
 
     @ManyToMany(mappedBy = "roomAdmins")
+    @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("managed_rooms")
     private List<Room> managedRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "roomRoot")
+    @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("owned_rooms")
     private List<Room> ownedRooms = new ArrayList<>();
 

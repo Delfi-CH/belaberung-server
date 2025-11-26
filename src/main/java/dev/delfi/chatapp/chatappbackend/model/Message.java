@@ -1,6 +1,7 @@
 package dev.delfi.chatapp.chatappbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -26,11 +27,13 @@ public class Message {
     private Long id;
 
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     @JoinColumn(name = "room_id", nullable = false)
     @JsonProperty("room")
     private Room room;
 
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonProperty("user")
     private User user;
@@ -45,6 +48,7 @@ public class Message {
     private String content;
 
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     @JoinColumn(name = "reply_id")
     @JsonProperty("reply")
     private Message replyMessage;
