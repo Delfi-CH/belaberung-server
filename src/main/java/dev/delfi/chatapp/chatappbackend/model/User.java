@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -56,7 +56,16 @@ public class User {
     @JsonProperty("owned_rooms")
     private List<Room> ownedRooms = new ArrayList<>();
 
-    public User() {}
+    public User(String username, String domain, String password, List<Message> messages, List<Room> joinedRooms, List<Room> bannedRooms, List<Room> managedRooms, List<Room> ownedRooms) {
+        this.username = username;
+        this.domain = domain;
+        this.password = password;
+        this.messages = messages;
+        this.joinedRooms = joinedRooms;
+        this.bannedRooms = bannedRooms;
+        this.managedRooms = managedRooms;
+        this.ownedRooms = ownedRooms;
+    }
 
     public void addMessage(Message message) {
         if (!messages.contains(message)) {
@@ -144,6 +153,16 @@ public class User {
             if (room.getBannedUsers().contains(this)) {
                 room.getBannedUsers().remove(this);
             }
+        }
+    }
+
+    public void leaveEveryRoom(User root) {
+        for (Room room : ownedRooms) {
+            stopOwningRoom(room, root);
+        }
+        for (Room room : joinedRooms) {
+            stopManagingRoom(room);
+            leaveRoom(room);
         }
     }
 }

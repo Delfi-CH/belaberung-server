@@ -1,10 +1,8 @@
 package dev.delfi.chatapp.chatappbackend.model;
 
 import dev.delfi.chatapp.chatappbackend.config.ChatappConfig;
-import dev.delfi.chatapp.chatappbackend.exception.MessageNotFoundException;
-import dev.delfi.chatapp.chatappbackend.exception.RoomHasToManyUsersExecption;
-import dev.delfi.chatapp.chatappbackend.exception.RoomNotFoundException;
-import dev.delfi.chatapp.chatappbackend.exception.UserNotFoundException;
+import dev.delfi.chatapp.chatappbackend.exception.*;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
@@ -229,7 +227,19 @@ public class ChatappService {
 
     // Delete Methods
 
-    public void deleteUserByID(Long id) { userRepository.deleteById(id); }
+    public void deleteUserByID(Long id) {
+        User user = userRepository.findUserById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+        User root = userRepository.getRoot();
+        if (user.equals(root)) {
+            throw new CannotDeleteRootUserExecption("Not allowed to delete the root user.");
+        }
+        user.leaveEveryRoom(root);
+        userRepository.deleteById(id);
+    }
     public void deleteMessageByID(Long id) { messageRepository.deleteById(id); }
-    public void deleteRoomByID(Long id) { roomRepository.deleteById(id); }
+    public void deleteRoomByID(Long id) {
+        Room room = roomRepository.findRoomById(id).orElseThrow(() -> new RoomNotFoundException("Room with id " + id + " not found"));
+        room.removeAllUsers();
+        roomRepository.deleteById(id);
+    }
 }

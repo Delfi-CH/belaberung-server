@@ -150,4 +150,8 @@ public class Room {
             message.setRoom(null);
         }
     }
+    public void removeAllUsers() {
+        users.clear();
+        roomAdmins.clear();
+    }
 }
