@@ -166,7 +166,7 @@ public class ChatappService {
     public void addUserToRoom(Long roomID, Long userID) {
         Room room = roomRepository.findRoomById(roomID).orElseThrow(() -> new RoomNotFoundException("Room with id " + roomID + " not found"));
         User user = userRepository.findUserById(userID).orElseThrow(() -> new UserNotFoundException("User with id " + userID + " not found"));
-        if (!(room.getMaxUsers() >= room.getUsers().size())) {
+        if (room.getMaxUsers() >= room.getUsers().size()) {
             user.joinRoom(room);
         } else {
             throw new RoomHasToManyUsersExecption("Room with id " + roomID + " has too many users");
