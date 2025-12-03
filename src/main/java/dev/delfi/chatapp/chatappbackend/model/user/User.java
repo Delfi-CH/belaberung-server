@@ -59,20 +59,6 @@ public class User {
         this.messages = messages;
     }
 
-    public void addMessage(Message message) {
-        if (!messages.contains(message)) {
-            messages.add(message);
-            message.setUser(this);
-        }
-    }
-
-    public void deleteMessage(Message message) {
-        if (messages.contains(message)) {
-            messages.remove(message);
-            message.setUser(null);
-        }
-    }
-
     public void addRoom(Room room, RoomRole role) {
         UserRoom membership = new UserRoom(this, room, role, RoomStatus.JOINED);
         memberships.add(membership);

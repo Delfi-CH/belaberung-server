@@ -54,7 +54,6 @@ public class Room {
 
     public Room() {}
 
-    // convenience methods
     public List<User> getUsersByRole(RoomRole role) {
         return members.stream()
                 .filter(ur -> ur.getRole() == role && ur.getStatus() == RoomStatus.JOINED)
@@ -85,17 +84,4 @@ public class Room {
         return getUsersByRole(RoomRole.USER);
     }
 
-    public void addMessage(Message message) {
-        if (!messages.contains(message)) {
-            messages.add(message);
-            message.setRoom(this);
-        }
-    }
-
-    public void removeMessage(Message message) {
-        if (messages.contains(message)) {
-            messages.remove(message);
-            message.setRoom(null);
-        }
-    }
 }

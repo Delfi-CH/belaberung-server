@@ -1,4 +1,4 @@
-package dev.delfi.chatapp.chatappbackend.control;
+package dev.delfi.chatapp.chatappbackend.control.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

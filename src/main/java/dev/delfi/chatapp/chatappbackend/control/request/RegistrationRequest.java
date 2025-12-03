@@ -1,4 +1,4 @@
-package dev.delfi.chatapp.chatappbackend.control;
+package dev.delfi.chatapp.chatappbackend.control.request;
 
 public class RegistrationRequest {
     public String username;

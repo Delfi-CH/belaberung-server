@@ -1,7 +1,8 @@
 package dev.delfi.chatapp.chatappbackend.control;
 
 import dev.delfi.chatapp.chatappbackend.auth.JsonWebTokenUtils;
-import dev.delfi.chatapp.chatappbackend.model.user.UserRepository;
+import dev.delfi.chatapp.chatappbackend.control.request.LoginRequest;
+import dev.delfi.chatapp.chatappbackend.control.request.RegistrationRequest;
 import dev.delfi.chatapp.chatappbackend.model.user.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

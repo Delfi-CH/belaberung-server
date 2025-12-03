@@ -1,8 +1,9 @@
 package dev.delfi.chatapp.chatappbackend.model.user;
 
 import dev.delfi.chatapp.chatappbackend.config.ChatappConfig;
-import dev.delfi.chatapp.chatappbackend.control.RegistrationRequest;
-import dev.delfi.chatapp.chatappbackend.model.room.RoomRepository;
+import dev.delfi.chatapp.chatappbackend.control.request.RegistrationRequest;
+import dev.delfi.chatapp.chatappbackend.exception.UserNotFoundException;
+import dev.delfi.chatapp.chatappbackend.exception.UsernameAlreadyExistsExecption;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +28,30 @@ public class UserService {
 
     public void register(RegistrationRequest request) {
         if (userRepository.existsByUsername(request.username)) {
-            throw new RuntimeException("Username already taken");
+            throw new UsernameAlreadyExistsExecption("Username taken!");
         }
 
         User user = new User(request.username, domain, passwordEncoder.encode(request.password), new ArrayList<>());
+        userRepository.save(user);
+    }
+
+    public void delete(Long id) {
+        User user = userRepository.findUserById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        userRepository.delete(user);
+    }
+    public void updatePassword(Long id, String oldPassword, String newPassword) {
+        User user = userRepository.findUserById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        if  (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new RuntimeException("Old password doesn't match");
+        } else {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        }
+    }
+
+    public void updateUsername(Long id, String username) {
+        User user = userRepository.findUserById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        user.setUsername(username);
         userRepository.save(user);
     }
 
