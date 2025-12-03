@@ -32,8 +32,6 @@ public class AuthFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
         String path = request.getServletPath();
-        System.out.println("AuthHeader: " + authHeader);
-        System.out.println("Path: " + path);
         if (path.startsWith("/api/chat/auth/login") || path.startsWith("/api/chat/auth/register")) {
             filterChain.doFilter(request, response);
             return;

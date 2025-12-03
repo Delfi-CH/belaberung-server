@@ -1,7 +1,6 @@
 package dev.delfi.chatapp.chatappbackend.control;
 
 import dev.delfi.chatapp.chatappbackend.model.room.Room;
-import dev.delfi.chatapp.chatappbackend.model.room.RoomRepository;
 import dev.delfi.chatapp.chatappbackend.model.room.RoomService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

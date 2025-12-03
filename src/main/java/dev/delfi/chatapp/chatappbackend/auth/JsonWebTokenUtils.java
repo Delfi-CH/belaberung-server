@@ -15,7 +15,7 @@ public class JsonWebTokenUtils {
 
     private static final String SECRET_STRING = "my_super_secret_key_that_is_long_enough!123";
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8));
-    private final long expirationMillis = 1000 * 60 * 60; // 1 hour
+    private final long expirationMillis = 1000 * 60 * 60 *24; //1 Day
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -29,7 +29,7 @@ public class JsonWebTokenUtils {
     public String extractUsername(String token) {
         try {
             Claims claims = Jwts.parser()
-                    .verifyWith(key)        // or .setSigningKey(key) — though verifyWith is the newer API
+                    .verifyWith(key)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
