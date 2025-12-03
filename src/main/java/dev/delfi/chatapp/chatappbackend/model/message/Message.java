@@ -1,9 +1,11 @@
-package dev.delfi.chatapp.chatappbackend.model;
+package dev.delfi.chatapp.chatappbackend.model.message;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import dev.delfi.chatapp.chatappbackend.model.room.Room;
+import dev.delfi.chatapp.chatappbackend.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

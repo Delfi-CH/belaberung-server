@@ -1,4 +1,4 @@
-package dev.delfi.chatapp.chatappbackend.model;
+package dev.delfi.chatapp.chatappbackend.model.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

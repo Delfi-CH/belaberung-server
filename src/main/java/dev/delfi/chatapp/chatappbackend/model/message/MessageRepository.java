@@ -1,5 +1,7 @@
-package dev.delfi.chatapp.chatappbackend.model;
+package dev.delfi.chatapp.chatappbackend.model.message;
 
+import dev.delfi.chatapp.chatappbackend.model.room.Room;
+import dev.delfi.chatapp.chatappbackend.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
