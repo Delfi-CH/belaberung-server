@@ -41,7 +41,6 @@ public class AuthFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
         String path = request.getServletPath();
-        System.out.println("PATH = " + path);
         if (publicEndpoints.stream().anyMatch(path::startsWith)) {
             filterChain.doFilter(request, response);
             return;
