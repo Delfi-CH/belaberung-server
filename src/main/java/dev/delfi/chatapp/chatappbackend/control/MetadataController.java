@@ -2,6 +2,7 @@ package dev.delfi.chatapp.chatappbackend.control;
 
 import dev.delfi.chatapp.chatappbackend.auth.JsonWebTokenUtils;
 import dev.delfi.chatapp.chatappbackend.model.meta.MetadataService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -29,10 +30,10 @@ public class MetadataController {
     }
 
     @GetMapping("/status")
-    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<?> validateToken(@RequestHeader(value="Authorization", required = false) String authHeader) {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.badRequest().body(Map.of("valid", false, "reason", "missing_token"));
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(Map.of("valid", false, "reason", "missing_token"));
         }
 
         String token = authHeader.substring(7);
