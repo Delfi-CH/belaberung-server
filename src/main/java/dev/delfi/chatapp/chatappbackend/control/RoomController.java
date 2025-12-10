@@ -1,9 +1,13 @@
 package dev.delfi.chatapp.chatappbackend.control;
 
+import dev.delfi.chatapp.chatappbackend.control.request.RoomCreateRequest;
 import dev.delfi.chatapp.chatappbackend.exception.RoomNotFoundException;
+import dev.delfi.chatapp.chatappbackend.exception.UserNotFoundException;
 import dev.delfi.chatapp.chatappbackend.model.room.Room;
+import dev.delfi.chatapp.chatappbackend.model.room.RoomRole;
 import dev.delfi.chatapp.chatappbackend.model.room.RoomService;
 import dev.delfi.chatapp.chatappbackend.model.user.User;
+import dev.delfi.chatapp.chatappbackend.model.user.UserRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;;
@@ -13,9 +17,11 @@ import java.util.List;;
 public class RoomController {
 
     private final RoomService service;
+    private final UserRepository userRepository;
 
-    public RoomController(RoomService service) {
+    public RoomController(RoomService service, UserRepository userRepository) {
         this.service = service;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -36,8 +42,8 @@ public class RoomController {
     }
 
     @PostMapping
-    public void createRoom(@RequestBody Room room) {
-        service.create(room);
+    public void createRoom(@RequestBody RoomCreateRequest request) {
+        service.create(request);
     }
     @DeleteMapping("/{id}")
     public void deleteRoomById(@PathVariable Long id) {

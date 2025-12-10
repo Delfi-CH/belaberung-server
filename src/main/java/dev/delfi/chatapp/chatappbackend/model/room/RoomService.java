@@ -1,7 +1,10 @@
 package dev.delfi.chatapp.chatappbackend.model.room;
 
+import dev.delfi.chatapp.chatappbackend.control.request.RoomCreateRequest;
 import dev.delfi.chatapp.chatappbackend.exception.RoomNotFoundException;
+import dev.delfi.chatapp.chatappbackend.exception.UserNotFoundException;
 import dev.delfi.chatapp.chatappbackend.model.user.User;
+import dev.delfi.chatapp.chatappbackend.model.user.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,12 +14,23 @@ import java.util.Optional;
 @Service
 public class RoomService {
 
+    private UserRepository userRepository;
     private RoomRepository roomRepository;
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository, UserRepository userRepository) {
         this.roomRepository = roomRepository;
+        this.userRepository = userRepository;
     }
 
-    public void create(Room room) {
+    public void create(RoomCreateRequest request) {
+        Room room = new Room();
+        room.setName(request.getName());
+        room.setPublic(request.isPublic());
+        room.setDirectMessage(request.isDirectMessage());
+        room.setMaxUsers(request.getMaxUsers());
+        room.setPublic(request.isPublic());
+
+        User owner = userRepository.findUserById(request.getOwnerUserId()).orElseThrow(()->new UserNotFoundException("User not found"));
+        owner.addRoom(room, RoomRole.OWNER);
         roomRepository.save(room);
     }
     public void delete(Long id) {
