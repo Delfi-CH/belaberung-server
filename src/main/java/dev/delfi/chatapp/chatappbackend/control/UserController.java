@@ -23,11 +23,11 @@ public class UserController {
     public List<User> getAllUsers() {
         return service.getAllUsers();
     }
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public User getUser(@PathVariable Long id) {
         return service.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
-    @GetMapping("/{username}")
+    @GetMapping("/name/{username}")
     public User getUser(@PathVariable String username) {
         return service.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
