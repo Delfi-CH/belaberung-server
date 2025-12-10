@@ -1,6 +1,7 @@
 package dev.delfi.chatapp.chatappbackend.auth;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -15,7 +16,7 @@ public class JsonWebTokenUtils {
 
     private static final String SECRET_STRING = "my_super_secret_key_that_is_long_enough!123";
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8));
-    private final long expirationMillis = 1000 * 60 * 60 *24; //1 Day
+    private final long expirationMillis = 1000 * 60 * 60 *24; // 1 Day
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -41,11 +42,13 @@ public class JsonWebTokenUtils {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser()
+            Jws<Claims> claims = Jwts.parser()
                     .verifyWith(key)
                     .build()
                     .parseSignedClaims(token);
-            return true;
+
+            Date expiration = claims.getPayload().getExpiration();
+            return expiration == null || !expiration.before(new Date());
         } catch (JwtException e) {
             return false;
         }
