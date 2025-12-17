@@ -7,9 +7,14 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
+@Entity
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "room_id"})
+)
 @Getter
 @Setter
-@Entity
 public class UserRoom {
 
     @EmbeddedId
@@ -40,4 +45,16 @@ public class UserRoom {
         this.status = status;
         this.id = new UserRoomId(user.getId(), room.getId());
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserRoom that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 }
