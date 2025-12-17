@@ -43,17 +43,11 @@ public class Message {
     @JsonProperty("timestamp")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Date timestamp;
+    private Long timestamp;
 
     @JsonProperty("content")
     @Column(nullable = false)
     private String content;
-
-    @ManyToOne
-    @JsonIdentityReference(alwaysAsId = true)
-    @JoinColumn(name = "reply_id")
-    @JsonProperty("reply")
-    private Message replyMessage;
 
     public Message() {}
 }

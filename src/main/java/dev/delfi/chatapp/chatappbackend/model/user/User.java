@@ -90,4 +90,13 @@ public class User {
         });
     }
 
+    public void sendMessage(Message message) {
+        messages.add(message);
+    }
+    public void deleteMessage(Message message) {
+        if (messages.contains(message)) {
+            messages.remove(message);
+        }
+    }
+
 }

@@ -29,12 +29,12 @@ public class RoomService {
         room.setPublic(request.isPublic());
         room.setDirectMessage(request.isDirectMessage());
         room.setMaxUsers(request.getMaxUsers());
-        room.setPublic(request.isPublic());
+        roomRepository.save(room);
 
         User owner = userRepository.findUserById(request.getOwnerUserId()).orElseThrow(()->new UserNotFoundException("User not found"));
         owner.addRoom(room, RoomRole.OWNER);
-        roomRepository.save(room);
     }
+
     public void delete(Long id) {
         Room room = roomRepository.findById(id).orElseThrow(()->new RoomNotFoundException("Room not found"));
         roomRepository.delete(room);

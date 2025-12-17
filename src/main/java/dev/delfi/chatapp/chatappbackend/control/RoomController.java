@@ -2,8 +2,13 @@ package dev.delfi.chatapp.chatappbackend.control;
 
 import dev.delfi.chatapp.chatappbackend.control.request.RoomCreateRequest;
 import dev.delfi.chatapp.chatappbackend.control.request.RoomUserModifyerRequest;
+import dev.delfi.chatapp.chatappbackend.control.request.SendMessageRequest;
+import dev.delfi.chatapp.chatappbackend.exception.MessageNotFoundException;
 import dev.delfi.chatapp.chatappbackend.exception.RoomNotFoundException;
 import dev.delfi.chatapp.chatappbackend.exception.UserNotFoundException;
+import dev.delfi.chatapp.chatappbackend.model.message.Message;
+import dev.delfi.chatapp.chatappbackend.model.message.MessageResponseItem;
+import dev.delfi.chatapp.chatappbackend.model.message.MessageService;
 import dev.delfi.chatapp.chatappbackend.model.room.Room;
 import dev.delfi.chatapp.chatappbackend.model.room.RoomRole;
 import dev.delfi.chatapp.chatappbackend.model.room.RoomService;
@@ -18,9 +23,11 @@ import java.util.List;;
 public class RoomController {
 
     private final RoomService service;
+    private final MessageService msgService;
 
-    public RoomController(RoomService service, UserRepository userRepository) {
+    public RoomController(RoomService service, UserRepository userRepository, MessageService msgService) {
         this.service = service;
+        this.msgService = msgService;
     }
 
     @GetMapping
@@ -39,8 +46,12 @@ public class RoomController {
     public List<User> getUsersByRoomId(@PathVariable Long id) {
         return service.findAllUsers(id);
     }
+    @GetMapping("/{id}/messages")
+    public List<MessageResponseItem> getMessagesByRoomId(@PathVariable Long id) {
+        return msgService.getMessagesInRoom(id);
+    }
 
-    @PostMapping
+    @PostMapping("/create")
     public void createRoom(@RequestBody RoomCreateRequest request) {
         service.create(request);
     }
@@ -66,4 +77,10 @@ public class RoomController {
     public void updateRoomMaxUsers(@PathVariable Long id, @RequestBody Long maxUsers) {
         service.updateMaxUsers(id, maxUsers);
     }
+
+    @PostMapping("/{id}/send")
+    public void sendMessage(@PathVariable Long id, @RequestBody SendMessageRequest request){
+        msgService.sendMessage(request, id);
+    }
+
 }
