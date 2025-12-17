@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -47,7 +49,7 @@ public class User {
     private List<Message> messages = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserRoom> memberships = new ArrayList<>();
+    private Set<UserRoom> memberships = new HashSet<>();
 
     @JsonProperty("roles")
     private String roles;
@@ -60,13 +62,32 @@ public class User {
     }
 
     public void addRoom(Room room, RoomRole role) {
-        UserRoom membership = new UserRoom(this, room, role, RoomStatus.JOINED);
-        memberships.add(membership);
-        room.getMembers().add(membership);
+        memberships.stream()
+                .filter(ur -> ur.getRoom().equals(room))
+                .findFirst()
+                .ifPresentOrElse(
+                        ur -> {
+                            ur.setRole(role);
+                            ur.setStatus(RoomStatus.JOINED);
+                        },
+                        () -> {
+                            UserRoom membership = new UserRoom(this, room, role, RoomStatus.JOINED);
+                            membership.setUser(this);
+                            membership.setRoom(room);
+                            memberships.add(membership);
+                            room.getMembers().add(membership);
+                        }
+                );
     }
 
     public void removeRoom(Room room) {
-        memberships.removeIf(ur -> ur.getRoom().equals(room));
-        room.getMembers().removeIf(ur -> ur.getUser().equals(this));
+        memberships.removeIf(ur -> {
+            if (ur.getRoom().equals(room)) {
+                room.getMembers().remove(ur);
+                return true;
+            }
+            return false;
+        });
     }
+
 }

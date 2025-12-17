@@ -1,6 +1,7 @@
 package dev.delfi.chatapp.chatappbackend.control;
 
 import dev.delfi.chatapp.chatappbackend.control.request.RoomCreateRequest;
+import dev.delfi.chatapp.chatappbackend.control.request.RoomUserModifyerRequest;
 import dev.delfi.chatapp.chatappbackend.exception.RoomNotFoundException;
 import dev.delfi.chatapp.chatappbackend.exception.UserNotFoundException;
 import dev.delfi.chatapp.chatappbackend.model.room.Room;
@@ -17,22 +18,20 @@ import java.util.List;;
 public class RoomController {
 
     private final RoomService service;
-    private final UserRepository userRepository;
 
     public RoomController(RoomService service, UserRepository userRepository) {
         this.service = service;
-        this.userRepository = userRepository;
     }
 
     @GetMapping
     public List<Room> getAllRooms() {
         return service.getAllRooms();
     }
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public Room getRoomById(@PathVariable Long id) {
         return service.findRoomById(id).orElseThrow(()->new RoomNotFoundException("Room not found"));
     }
-    @GetMapping("/{name}")
+    @GetMapping("/name/{name}")
     public Room getRoomByName(@PathVariable String name) {
         return service.findRoomByName(name).orElseThrow(()->new RoomNotFoundException("Room not found"));
     }
@@ -45,9 +44,18 @@ public class RoomController {
     public void createRoom(@RequestBody RoomCreateRequest request) {
         service.create(request);
     }
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}/invite")
+    public void addUserToRoom(@PathVariable Long id, @RequestBody RoomUserModifyerRequest request) {
+        service.addUserToRoom(request.getUsername(), id);
+    }
+    @DeleteMapping("/{id}/")
     public void deleteRoomById(@PathVariable Long id) {
         service.delete(id);
+    }
+
+    @DeleteMapping("/{id}/remove")
+    public void removeUserFromRoom(@PathVariable Long id, @RequestBody RoomUserModifyerRequest request) {
+        service.removeUserFromRoom(request.getUsername(), id);
     }
 
     @PutMapping("/{id}/name")

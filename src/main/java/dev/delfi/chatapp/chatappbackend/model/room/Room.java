@@ -13,7 +13,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -50,7 +52,7 @@ public class Room {
     private Long maxUsers = 10L;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserRoom> members = new ArrayList<>();
+    private Set<UserRoom> members = new HashSet<>();
 
     public Room() {}
 

@@ -5,6 +5,8 @@ import dev.delfi.chatapp.chatappbackend.exception.RoomNotFoundException;
 import dev.delfi.chatapp.chatappbackend.exception.UserNotFoundException;
 import dev.delfi.chatapp.chatappbackend.model.user.User;
 import dev.delfi.chatapp.chatappbackend.model.user.UserRepository;
+import dev.delfi.chatapp.chatappbackend.model.user.UserRoom;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -66,5 +68,23 @@ public class RoomService {
         Room room = roomRepository.findRoomById(id).orElseThrow(()->new RoomNotFoundException("Room not found"));
         room.getMembers().forEach(member -> {result.add(member.getUser());});
         return result;
+    }
+
+    @Transactional
+    public void addUserToRoom(String username, Long roomID) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        Room room = roomRepository.findRoomById(roomID)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
+
+        user.addRoom(room, RoomRole.USER);
+    }
+
+    @Transactional
+    public void removeUserFromRoom(String username, Long roomID) {
+        User user = userRepository.findByUsername(username).orElseThrow(()-> new UserNotFoundException("User not found"));
+        Room room = roomRepository.findRoomById(roomID).orElseThrow(()->new RoomNotFoundException("Room not found"));
+        user.removeRoom(room);
+        userRepository.save(user);
     }
 }
