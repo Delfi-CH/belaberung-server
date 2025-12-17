@@ -42,12 +42,6 @@ public class Room {
     @JsonProperty("messages")
     private Set<Message> messages = new HashSet<>();
 
-    @JsonProperty("is_public")
-    private boolean isPublic;
-
-    @JsonProperty("is_directmessage")
-    private boolean isDirectMessage;
-
     @JsonProperty("max_users")
     private Long maxUsers = 10L;
 

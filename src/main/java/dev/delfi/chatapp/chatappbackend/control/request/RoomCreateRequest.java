@@ -9,12 +9,6 @@ import lombok.Setter;
 public class RoomCreateRequest {
     private String name;
 
-    @JsonProperty("is_public")
-    private boolean isPublic;
-
-    @JsonProperty("is_directmessage")
-    private boolean isDirectMessage;
-
     @JsonProperty("max_users")
     private Long maxUsers = 10L;
 

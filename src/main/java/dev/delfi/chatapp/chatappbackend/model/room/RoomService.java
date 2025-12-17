@@ -26,8 +26,6 @@ public class RoomService {
     public void create(RoomCreateRequest request) {
         Room room = new Room();
         room.setName(request.getName());
-        room.setPublic(request.isPublic());
-        room.setDirectMessage(request.isDirectMessage());
         room.setMaxUsers(request.getMaxUsers());
         roomRepository.save(room);
 
