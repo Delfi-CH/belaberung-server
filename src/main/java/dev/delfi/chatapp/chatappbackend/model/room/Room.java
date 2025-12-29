@@ -42,9 +42,6 @@ public class Room {
     @JsonProperty("messages")
     private Set<Message> messages = new HashSet<>();
 
-    @JsonProperty("max_users")
-    private Long maxUsers = 10L;
-
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserRoom> members = new HashSet<>();
 

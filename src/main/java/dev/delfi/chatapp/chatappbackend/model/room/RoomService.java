@@ -26,7 +26,6 @@ public class RoomService {
     public void create(RoomCreateRequest request) {
         Room room = new Room();
         room.setName(request.getName());
-        room.setMaxUsers(request.getMaxUsers());
         roomRepository.save(room);
 
         User owner = userRepository.findUserById(request.getOwnerUserId()).orElseThrow(()->new UserNotFoundException("User not found"));
@@ -40,15 +39,6 @@ public class RoomService {
     public void updateName(Long id, String name) {
         Room room = roomRepository.findById(id).orElseThrow(()->new RoomNotFoundException("Room not found"));
         room.setName(name);
-        roomRepository.save(room);
-    }
-    public void updateMaxUsers(Long id, Long maxUsers) {
-        Room room = roomRepository.findById(id).orElseThrow(()->new RoomNotFoundException("Room not found"));
-        if (maxUsers >= 1000L) {
-            room.setMaxUsers(999L);
-        } else if (maxUsers <= 0L) {
-            room.setMaxUsers(10L);
-        }
         roomRepository.save(room);
     }
 

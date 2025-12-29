@@ -9,9 +9,6 @@ import lombok.Setter;
 public class RoomCreateRequest {
     private String name;
 
-    @JsonProperty("max_users")
-    private Long maxUsers = 10L;
-
     @JsonProperty("owner_user_id")
     private Long ownerUserId;
 }

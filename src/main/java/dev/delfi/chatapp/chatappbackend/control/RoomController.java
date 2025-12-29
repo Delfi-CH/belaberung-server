@@ -73,10 +73,6 @@ public class RoomController {
     public void updateRoomName(@PathVariable Long id, @RequestBody String name) {
         service.updateName(id, name);
     }
-    @PutMapping("/{id}/maxusers")
-    public void updateRoomMaxUsers(@PathVariable Long id, @RequestBody Long maxUsers) {
-        service.updateMaxUsers(id, maxUsers);
-    }
 
     @PostMapping("/{id}/send")
     public void sendMessage(@PathVariable Long id, @RequestBody SendMessageRequest request){
