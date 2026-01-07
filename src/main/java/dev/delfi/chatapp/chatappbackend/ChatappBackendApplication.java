@@ -1,5 +1,8 @@
 package dev.delfi.chatapp.chatappbackend;
 
+import dev.delfi.chatapp.chatappbackend.model.message.MessageRepository;
+import dev.delfi.chatapp.chatappbackend.model.meta.LongtermMetadata;
+import dev.delfi.chatapp.chatappbackend.model.meta.LongtermMetadataRepository;
 import dev.delfi.chatapp.chatappbackend.model.user.User;
 import dev.delfi.chatapp.chatappbackend.model.user.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -18,10 +21,14 @@ public class ChatappBackendApplication {
     }
 
     @Bean
-    CommandLineRunner run(ChatappBackendApplication application, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner run(ChatappBackendApplication application, UserRepository userRepository, PasswordEncoder passwordEncoder, LongtermMetadataRepository metadataRepository) {
         return args -> {
-            if(userRepository.findByUsername("root").isPresent()) return;
-            userRepository.save(new User("root", "root", passwordEncoder.encode("1234"), new ArrayList<>()));
+            if(!userRepository.findByUsername("root").isPresent()) {
+                userRepository.save(new User("root", "root", passwordEncoder.encode("1234"), new ArrayList<>()));
+            }
+            if(!metadataRepository.findByName("main").isPresent()) {
+                metadataRepository.save(new LongtermMetadata(0L, "main"));
+            }
         };
     }
 }

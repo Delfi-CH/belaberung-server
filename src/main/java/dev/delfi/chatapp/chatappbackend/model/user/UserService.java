@@ -4,6 +4,7 @@ import dev.delfi.chatapp.chatappbackend.config.ChatappConfig;
 import dev.delfi.chatapp.chatappbackend.control.request.RegistrationRequest;
 import dev.delfi.chatapp.chatappbackend.exception.UserNotFoundException;
 import dev.delfi.chatapp.chatappbackend.exception.UsernameAlreadyExistsExecption;
+import dev.delfi.chatapp.chatappbackend.model.meta.MetadataService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,15 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MetadataService metadataService;
     private String domain;
 
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ChatappConfig config) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ChatappConfig config, MetadataService metadataService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.domain = config.getDomain();
+        this.metadataService = metadataService;
     }
 
 
@@ -37,8 +40,13 @@ public class UserService {
 
     public void delete(Long id) {
         User user = userRepository.findUserById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
-        userRepository.delete(user);
+        Long deletedUserCount = metadataService.getDeletedUserCount();
+        user.setUsername("DeletedUser"+deletedUserCount);
+        user.setEnabled(false);
+        metadataService.upDeletedUserCount();
+        userRepository.save(user);
     }
+
     public void updatePassword(Long id, String oldPassword, String newPassword) {
         User user = userRepository.findUserById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
         if  (!passwordEncoder.matches(oldPassword, user.getPassword())) {

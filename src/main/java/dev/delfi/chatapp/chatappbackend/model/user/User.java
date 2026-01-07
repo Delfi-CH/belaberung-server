@@ -54,6 +54,9 @@ public class User {
     @JsonProperty("roles")
     private String roles;
 
+    @Column(nullable = false)
+    private boolean enabled = true;
+
     public User(String username, String domain, String password, List<Message> messages) {
         this.username = username;
         this.domain = domain;

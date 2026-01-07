@@ -6,6 +6,7 @@ import dev.delfi.chatapp.chatappbackend.model.user.User;
 import dev.delfi.chatapp.chatappbackend.model.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,15 +22,23 @@ public class UserController {
 
     @GetMapping
     public List<User> getAllUsers() {
-        return service.getAllUsers();
+        List<User> tmp = service.getAllUsers();
+        for (User tmpusr: tmp) {
+            tmpusr.setPassword("no");
+        }
+        return tmp;
     }
     @GetMapping("/id/{id}")
     public User getUser(@PathVariable Long id) {
-        return service.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User tmp = service.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        tmp.setPassword("no");
+        return tmp;
     }
     @GetMapping("/name/{username}")
     public User getUser(@PathVariable String username) {
-        return service.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User tmp = service.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+        tmp.setPassword("no");
+        return tmp;
     }
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
