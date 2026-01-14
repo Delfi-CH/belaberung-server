@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>dev.delfi.chatapp</groupId>
-    <artifactId>chatapp-backend</artifactId>
+    <artifactId>belaberung-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>chatapp-backend</name>
-    <description>chatapp-backend</description>
+    <name>belaberung-backend</name>
+    <description>belaberung-backend</description>
     <url/>
     <licenses>
         <license/>

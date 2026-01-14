@@ -16,5 +16,5 @@ You will need a existing MariaDB server
 git clone https://github.com/Delfi-CH/belaberung-server.git
 cd belaberung-server
 mvn package
-java -jar
+java -jar target/belaberung-backend-0.0.1-SNAPSHOT.jar -DBELABERUNG_DB_URL=jdbc:mariadb://<YOUR DATABASE IP>:3306/chatapp -DBELABERUNG_DB_USER=<YOUR DATABASE USERNAME> -DBELABERUNG_DB_PASSWORD=<YOUR DATABASE PASSWORD>
 ```
