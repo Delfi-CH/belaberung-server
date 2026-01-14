@@ -1,6 +1,6 @@
 chatapp:
   domain: example.com
-  applicationName: chatapp-server
+  applicationName: belaberung-server
   applicationVersion: 0
   protocolVersion: 0
   adminName: root
