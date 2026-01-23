@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.delfi.chatapp</groupId>
     <artifactId>belaberung-backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>belaberung-backend</name>
     <description>belaberung-backend</description>
     <url/>
