@@ -8,7 +8,13 @@ The name "belaberung" comes from the german word "labern", which means to talk u
 
 The backend for belaberung is written in Java using a SpringBoot REST API
 
-### Run
+## Usage
+
+### Docker
+
+See [github.com/Delfi-CH/belaberung-docker](https://github.com/Delfi-CH/belaberung-docker) on how to run this in docker.
+
+#### Run
 
 You will need a existing MariaDB server
 
