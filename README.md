@@ -14,6 +14,8 @@ The backend for belaberung is written in Java using a SpringBoot REST API
 
 See [github.com/Delfi-CH/belaberung-docker](https://github.com/Delfi-CH/belaberung-docker) on how to run this in docker.
 
+### Manually
+
 #### Run
 
 You will need a existing MariaDB server
